@@ -1,5 +1,6 @@
 import json
-from tornado.web import Application, RequestHandler
+from tornado.web import Application
+from requestHandler import RequestHandler
 from tornado.ioloop import IOLoop
 from redis_lib import getValue,log,getKeys
 
