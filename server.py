@@ -1,14 +1,7 @@
-# import tornado.ioloop
-# import tornado.web
+import json
 from tornado.web import Application, RequestHandler
 from tornado.ioloop import IOLoop
-
-import redis
-import json
-
-import redis_lib
-# keys = redis_lib.keys()
-# print keys
+from redis_lib import getValue,log,getKeys
 
 class MainHandler(RequestHandler):
     def get(self):
@@ -16,26 +9,17 @@ class MainHandler(RequestHandler):
 
 class HelloWorldHandler(RequestHandler):
     def get(self):
-        self.write('hiiiii')
+        path = self.request.path
+        ip = self.request.remote_ip
+        log(path,ip)
+        self.write(path+ip)
 
 class LogsHandler(RequestHandler):
     def get(self):
-        # response = { 'id': 23, 'load':'nothing'}
-        # r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        #
-        # keys = r.keys('*')
-        # print keys
-        #
-        # response = r.hgetall('path:/v1/logs')
-        # logs = [json.loads(x) for x in response.values()]
-        #
-        # print logs
-
-        keys = redis_lib.keys()
-        logs = [json.loads(redis_lib.getHash(k)) for k in keys]
-        print logs
-
-        self.write({'logset':logs})
+        keys = getKeys()
+        logs = [{k[6:]:getValue(k)} for k in keys]
+        # ohhh how I missed list comprehensions.
+        self.write({'logset':logs,'keys':keys})
 
 def make_app():
     return Application([
