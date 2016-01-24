@@ -21,6 +21,6 @@ def getValue(key):
 def log(path,ip):
     r.hset(
         'path:'+path,
-        ip+'|'+str(int(time.time())),
+        ip+'|'+str(int(time.time()*1000)),
         json.dumps({'ip':ip,'timestamp':int(round(time.time()*1000))})
     )
