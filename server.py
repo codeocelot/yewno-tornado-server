@@ -13,17 +13,19 @@ class AllLogsHandler(RequestHandler):
         keys = getKeys()
         logs = [{'endpoint':k[6:],'logs':getValue(k)} for k in keys]
         # ohhh how I missed list comprehensions.
-        self.write({'logset':logs,'keys':keys})
+        self.write({'logset':logs})
 
+# Given /{path}/logs will return logs for {path} endpoint
 class SingleLogHandler(RequestHandler):
     def get(self):
-        self.write({'logs':getValue('path:'+self.request.path)})
+        self.write({'logs':getValue('path:'+self.request.path.replace('/logs',''))})
 
 def make_app():
     return Application(
         [   (r"/v1/hello-world",HelloWorldHandler),
             (r"/v1/logs",AllLogsHandler),
-            (r"/.*/logs",SingleLogHandler)  ]
+            (r"/v1/.*/logs",SingleLogHandler),
+        ]
         , debug=True
     )
 

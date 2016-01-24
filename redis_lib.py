@@ -1,4 +1,4 @@
-# As I understand, pythonic imported values are bound to the module
+# As I understand, python imported values are bound to the module
 # making them kinda singletons.  r is thus a single re-used connection
 # within server.py
 
@@ -12,7 +12,6 @@ def getKeys():
 
 def getValue(key):
     logs = r.hgetall(key);
-    # return logs
     d = []
     for k,v in r.hgetall(key).iteritems():
         j = json.loads(v)
